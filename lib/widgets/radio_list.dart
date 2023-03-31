@@ -15,7 +15,6 @@ class RadioList extends StatelessWidget {
         return ListTile(
           leading: Image.network(station.photoUrl, width: 50, height: 50, fit: BoxFit.cover,),
           horizontalTitleGap: 40,
-          minVerticalPadding: -40,
           title: Text(station.name),
         );
       },
