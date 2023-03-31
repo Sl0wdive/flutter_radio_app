@@ -11,82 +11,123 @@ class RadioPlayer extends StatefulWidget {
   State<RadioPlayer> createState() => _RadioPlayer();
 }
 
-class _RadioPlayer extends State<RadioPlayer> {
+class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixin{
+  late AnimationController animationController;
+  late Animation<Offset> radioOffset;
+  late Animation<Offset> radioListOffset;
+
+  bool listEnabled = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    
+    radioListOffset = Tween(
+      begin: const Offset(0, 1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOut));
+  
+    radioOffset = Tween(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOut));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 200, 
-                width: 200, 
-                color: Colors.pink,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    color: Colors.white,
-                    iconSize: 30,
-                    icon: Icon(
-                      Icons.list
+          child: SlideTransition(
+            position: radioOffset,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 200, 
+                  width: 200, 
+                  color: Colors.pink,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          listEnabled = !listEnabled;
+                        });
+                        switch (animationController.status) {
+                          case AnimationStatus.dismissed:
+                            animationController.forward();
+                            break;
+                          case AnimationStatus.completed:
+                            animationController.reverse();
+                            break;
+                        }
+                      },
+                      color: listEnabled ? Colors.deepPurple : Colors.white,
+                      iconSize: 30,
+                      icon: Icon(
+                        Icons.list
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    color: Colors.white,
-                    iconSize: 30,
-                    icon: Icon(
-                      Icons.play_arrow
+                    IconButton(
+                      onPressed: () {},
+                      color: Colors.white,
+                      iconSize: 30,
+                      icon: Icon(
+                        Icons.play_arrow
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    color: Colors.white,
-                    iconSize: 30,
-                    icon: Icon(
-                      Icons.volume_up
+                    IconButton(
+                      onPressed: () {},
+                      color: Colors.white,
+                      iconSize: 30,
+                      icon: Icon(
+                        Icons.volume_up
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           )
         ),
-        Container(
-          height: 300,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white70,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(
-                30
-              )),
+        SlideTransition(
+          position: radioListOffset,
+          child: Container(
+            height: 300,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white70,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(
+                  30
+                )),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Text(
+                    'Radio list',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                ),
+                const Divider(
+                  color: Colors.black,
+                  indent: 30,
+                  endIndent: 30,
+                ),
+                Expanded(child: RadioList()),
+              ],
+              )
           ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: const Text(
-                  'Radio list',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),),
-              ),
-              const Divider(
-                color: Colors.black,
-                indent: 30,
-                endIndent: 30,
-              ),
-              Expanded(child: RadioList()),
-            ],
-            )
         )
       ],
     );
