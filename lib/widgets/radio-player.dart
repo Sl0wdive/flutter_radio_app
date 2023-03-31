@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
+import 'radio_list.dart';
+
 class RadioPlayer extends StatefulWidget {
   const RadioPlayer({super.key});
 
@@ -55,6 +57,36 @@ class _RadioPlayer extends State<RadioPlayer> {
               )
             ],
           )
+        ),
+        Container(
+          height: 300,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white70,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(
+                30
+              )),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: const Text(
+                  'Radio list',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),),
+              ),
+              const Divider(
+                color: Colors.black,
+                indent: 30,
+                endIndent: 30,
+              ),
+              Expanded(child: RadioList()),
+            ],
+            )
         )
       ],
     );
