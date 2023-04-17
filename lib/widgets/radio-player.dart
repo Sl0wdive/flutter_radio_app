@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:provider/provider.dart';
+import 'package:radiko/provider/radio_provider.dart';
 
 import 'radio_list.dart';
 
@@ -49,7 +51,13 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
                 Container(
                   height: 200, 
                   width: 200, 
-                  color: Colors.pink,
+                  color: Colors.transparent,
+                  child: Consumer<RadioProvider>(builder: ((context, value, child) {
+                    return Image.network(
+                      value.station.photoUrl, 
+                      fit: BoxFit.cover,
+                    );
+                  })),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
