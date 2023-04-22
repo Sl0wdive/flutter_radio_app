@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:radiko/api/radio_api.dart';
 import 'package:radiko/provider/radio_provider.dart';
+import 'package:radiko/widgets/info.dart';
 import 'package:volume_controller/volume_controller.dart';
 
 import 'radio_list.dart';
@@ -20,8 +21,10 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
   late VolumeController volumeController;
 
   bool listEnabled = false;
+  bool infoEnabled = false;
   bool isPlaying = true;
   bool isMuted = false;
+  bool menuEnabled = false;
 
   @override
   void initState() {
@@ -75,16 +78,21 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
                     IconButton(
                       onPressed: () {
                         setState(() {
-                          listEnabled = !listEnabled;
+                          if(!infoEnabled){
+                            listEnabled = !listEnabled;
+                          }
                         });
-                        switch (animationController.status) {
-                          case AnimationStatus.dismissed:
-                            animationController.forward();
-                            break;
-                          case AnimationStatus.completed:
-                            animationController.reverse();
-                            break;
+                        if(!infoEnabled){
+                          switch (animationController.status) {
+                            case AnimationStatus.dismissed:
+                              animationController.forward();
+                              break;
+                            case AnimationStatus.completed:
+                              animationController.reverse();
+                              break;
+                          }
                         }
+                        
                       },
                       color: listEnabled ? Colors.deepPurple : Colors.white,
                       iconSize: 30,
@@ -119,6 +127,30 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
                         isMuted ? Icons.volume_mute : Icons.volume_up
                       ),
                     ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if(!listEnabled){
+                            infoEnabled = !infoEnabled;
+                          }
+                        });
+                        if(!listEnabled){
+                          switch (animationController.status) {
+                            case AnimationStatus.dismissed:
+                              animationController.forward();
+                              break;
+                            case AnimationStatus.completed:
+                              animationController.reverse();
+                              break;
+                          }
+                        }
+                      },
+                      color: infoEnabled ? Colors.deepPurple : Colors.white,
+                      iconSize: 30,
+                      icon: Icon(
+                        Icons.cell_tower
+                      ),
+                    ),
                   ],
                 )
               ],
@@ -141,8 +173,8 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: const Text(
-                    'Radio list',
+                  child: Text(
+                    infoEnabled ?  'Broadcat info' : 'Radio list',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -153,11 +185,11 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
                   indent: 30,
                   endIndent: 30,
                 ),
-                Expanded(child: RadioList()),
+                Expanded(child: infoEnabled ? Info() : RadioList()),
               ],
-              )
+            ),
           ),
-        )
+        ),
       ],
     );
   }

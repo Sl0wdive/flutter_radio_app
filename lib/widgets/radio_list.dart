@@ -28,6 +28,7 @@ class _RadioListState extends State<RadioList> {
   Widget build(BuildContext context) {
     final provider = Provider.of<RadioProvider>(context, listen: false);
     return ListView.builder(
+      padding: EdgeInsets.zero,
       itemCount: RadioStations.allStations.length,
       itemBuilder:(context, index) {
         final station = RadioStations.allStations[index];
@@ -45,8 +46,8 @@ class _RadioListState extends State<RadioList> {
               style: TextStyle(
                 color: isSelected ? Colors.white : Colors.black,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
               ),
+            ),
             onTap: () async {
               provider.setRadioStation(station);
               SharedPrefsApi.setStation(station);
