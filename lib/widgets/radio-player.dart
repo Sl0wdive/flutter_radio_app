@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
+import 'package:radiko/api/radio_api.dart';
 import 'package:radiko/provider/radio_provider.dart';
+import 'package:volume_controller/volume_controller.dart';
 
 import 'radio_list.dart';
 
@@ -17,8 +17,11 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
   late AnimationController animationController;
   late Animation<Offset> radioOffset;
   late Animation<Offset> radioListOffset;
+  late VolumeController volumeController;
 
   bool listEnabled = false;
+  bool isPlaying = true;
+  bool isMuted = false;
 
   @override
   void initState() {
@@ -35,6 +38,13 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
       begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOut));
+  
+    RadioApi.player.stateStream.listen((event) {
+      setState(() {
+        isPlaying = event;
+      });
+    });
+    volumeController = VolumeController();
   }
 
   @override
@@ -83,19 +93,30 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        isPlaying ? RadioApi.player.stop() : RadioApi.player.play();
+                      },
                       color: Colors.white,
                       iconSize: 30,
                       icon: Icon(
-                        Icons.play_arrow
+                        isPlaying ? Icons.stop : Icons.play_arrow 
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async{
+                        if(isMuted) {
+                          volumeController.setVolume(0.5);
+                        } else {
+                          volumeController.muteVolume();
+                        }
+                        setState(() {
+                          isMuted = !isMuted;
+                        });
+                      },
                       color: Colors.white,
                       iconSize: 30,
                       icon: Icon(
-                        Icons.volume_up
+                        isMuted ? Icons.volume_mute : Icons.volume_up
                       ),
                     ),
                   ],

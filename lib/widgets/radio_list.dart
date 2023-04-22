@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:radiko/api/shared_preferences.dart';
 import 'package:radiko/models/radio_station.dart';
 import 'package:radiko/provider/radio_provider.dart';
 import 'package:radiko/utils/radio_stations.dart';
+import 'package:radiko/api/radio_api.dart';
 
 class RadioList extends StatefulWidget {
   const RadioList({super.key});
@@ -48,9 +47,10 @@ class _RadioListState extends State<RadioList> {
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
-            onTap: () {
+            onTap: () async {
               provider.setRadioStation(station);
               SharedPrefsApi.setStation(station);
+              await RadioApi.changeStation(station);
               setState(() {
                 selectedStation = station;
               });
