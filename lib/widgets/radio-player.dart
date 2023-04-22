@@ -30,7 +30,7 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
   void initState() {
     // TODO: implement initState
     super.initState();
-    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     
     radioListOffset = Tween(
       begin: const Offset(0, 1),
@@ -129,11 +129,6 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
                     ),
                     IconButton(
                       onPressed: () {
-                        setState(() {
-                          if(!listEnabled){
-                            infoEnabled = !infoEnabled;
-                          }
-                        });
                         if(!listEnabled){
                           switch (animationController.status) {
                             case AnimationStatus.dismissed:
@@ -144,6 +139,11 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
                               break;
                           }
                         }
+                        setState(() {
+                          if(!listEnabled){
+                            infoEnabled = !infoEnabled;
+                          }
+                        });
                       },
                       color: infoEnabled ? Colors.deepPurple : Colors.white,
                       iconSize: 30,
@@ -178,7 +178,8 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                    ),),
+                    ),
+                  ),
                 ),
                 const Divider(
                   color: Colors.black,

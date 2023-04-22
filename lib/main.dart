@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: ((context) => RadioProvider(initialRadioStation)))
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Radiko',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
