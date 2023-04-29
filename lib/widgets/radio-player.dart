@@ -174,7 +174,7 @@ class _RadioPlayer extends State<RadioPlayer> with SingleTickerProviderStateMixi
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    infoEnabled ?  'Broadcat info' : 'Radio list',
+                    infoEnabled ?  'Broadcast info' : 'Radio list',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
